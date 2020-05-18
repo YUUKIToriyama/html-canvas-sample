@@ -12,9 +12,19 @@
 			<h1>GAZOU LOADING SANPURU</h1>
 		</header>
 		<main>
-			<canvas id="picture"></canvas>
-			<input type="file" name="readImage" id="readImage" accept="image/jpeg,image/png">
-			<textarea name="output" id="output"></textarea>			
+			<canvas id="picture" width="500px" height="80vh"></canvas>
+			<div id="controls">
+				<form>
+					<fieldset>
+						<legend>画像を選択</legend>
+						<input type="file" name="readImage" id="readImage" accept="image/jpeg,image/png">
+					</fieldset>
+					<fieldset>
+						<legend>四点の座標</legend>
+						<textarea name="output" id="output"></textarea>
+					</fieldset>
+				</form>		
+			</div>
 		</main>
 		
 	</body>

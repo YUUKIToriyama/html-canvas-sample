@@ -5,4 +5,11 @@ canvas {
 	border: solid 2px black;
 }
 
+#controls {
+	width: calc(100vw - 550px);
+	float: right;
+}
 
+textarea {
+	height: 60vh;
+}
