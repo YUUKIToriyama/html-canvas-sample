@@ -1,6 +1,11 @@
 /* style.css */
 
-
+header {
+	height: 10vh;
+}
+main {
+	height: 80vh;
+}
 canvas {
 	border: solid 2px black;
 }

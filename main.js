@@ -1,8 +1,17 @@
 /* main.js */
 
+window.onload = () => {
+	var image = new Image();
+	image.src = "images/default.png";
+	image.onload = () => {
+		context.drawImage(image, 0, 0);
+	}
+}
+
 var zoom = 1;
 // 読み込みボタンを押すと画像が読み込まれる
 const loadLocalImage = (event) => {
+	initializeCanvas();
 	var target = event.target;
 	if (!target.files.length) {
 		alert("ファイルが選択されていません");
@@ -14,7 +23,7 @@ const loadLocalImage = (event) => {
 document.getElementById("readImage").addEventListener("change", loadLocalImage, false);
 
 // canvasに画像をロードする
-const loadAnImage = () => {
+const loadAnImage = (file) => {
 	var inputFile = document.getElementById("readImage");
 	var file = inputFile.files[0];
 
@@ -33,7 +42,6 @@ const loadAnImage = () => {
 		image.src = ev.target.result;
 	}
 	filereader.readAsDataURL(file);
-	points = {};
 }
 
 
@@ -83,8 +91,12 @@ canvas.addEventListener("click", (ev) => {
 
 // キャンバスを初期化する函数
 const initializeCanvas = () => {
+	points = {};
 	context.clearRect(0, 0, canvas.width / zoom, canvas.height / zoom);
 	loadAnImage();
+	const output = document.getElementById("output");
+	output.value = "";
+
 }
 
 document.addEventListener("keydown", event => {
