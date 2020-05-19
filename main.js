@@ -1,17 +1,8 @@
 /* main.js */
 
-window.onload = () => {
-	var image = new Image();
-	image.src = "images/default.png";
-	image.onload = () => {
-		context.drawImage(image, 0, 0);
-	}
-}
-
 var zoom = 1;
 // 読み込みボタンを押すと画像が読み込まれる
 const loadLocalImage = (event) => {
-	initializeCanvas();
 	var target = event.target;
 	if (!target.files.length) {
 		alert("ファイルが選択されていません");
@@ -23,7 +14,7 @@ const loadLocalImage = (event) => {
 document.getElementById("readImage").addEventListener("change", loadLocalImage, false);
 
 // canvasに画像をロードする
-const loadAnImage = (file) => {
+const loadAnImage = () => {
 	var inputFile = document.getElementById("readImage");
 	var file = inputFile.files[0];
 
@@ -42,15 +33,16 @@ const loadAnImage = (file) => {
 		image.src = ev.target.result;
 	}
 	filereader.readAsDataURL(file);
+	points = [];
 }
 
 
 // マウスで四角形領域を描く
-var points = {};
+var points = [];
 const canvas = document.getElementById("picture");
 const context = canvas.getContext("2d");
 canvas.addEventListener("click", (ev) => {
-	let n = Object.keys(points).length;
+	let n = points.length;
 	if (n < 4) {
 		var rect = ev.target.getBoundingClientRect();
 		var x = (ev.clientX - rect.left) / zoom;
@@ -61,23 +53,23 @@ canvas.addEventListener("click", (ev) => {
 		context.fill();
 		context.stroke();
 		
-		points[n] = [x, y];
+		points.push({"x": Math.floor(x), "y": Math.floor(y)});
 		if (n > 0) {
 			context.lineWidth = 2 / zoom;
 			context.beginPath();
-			context.moveTo(points[n-1][0], points[n-1][1]);
-			context.lineTo(points[n][0], points[n][1]);
+			context.moveTo(points[n-1]["x"], points[n-1]["y"]);
+			context.lineTo(points[n]["x"], points[n]["y"]);
 			context.closePath();
 			context.stroke();
 			if (n == 3) {
 				context.beginPath();
-				context.moveTo(points[3][0], points[3][1]);
-				context.lineTo(points[0][0], points[0][1]);
+				context.moveTo(points[3]["x"], points[3]["y"]);
+				context.lineTo(points[0]["x"], points[0]["y"]);
 				context.closePath();
 				context.stroke();
 
 				const output = document.getElementById("output");
-				output.value = JSON.stringify(Object.values(points), null, "\t");
+				output.value = JSON.stringify(points, null, "\t");
 			}
 		}
 	} else {
@@ -91,12 +83,8 @@ canvas.addEventListener("click", (ev) => {
 
 // キャンバスを初期化する函数
 const initializeCanvas = () => {
-	points = {};
 	context.clearRect(0, 0, canvas.width / zoom, canvas.height / zoom);
 	loadAnImage();
-	const output = document.getElementById("output");
-	output.value = "";
-
 }
 
 document.addEventListener("keydown", event => {
