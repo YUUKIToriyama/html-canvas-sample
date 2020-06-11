@@ -16,6 +16,7 @@ const loadLocalImage = (event) => {
 		alert("ファイルが選択されていません");
 		return;
 	}
+	points = [];
 	loadImage(event.target);
 }
 
