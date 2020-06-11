@@ -49,7 +49,6 @@ const loadImage = (input) => {
 			zoom = canvas.clientWidth / image.naturalWidth;
 		}
 	}
-	//downloadCSV.disabled = false;
 }
 
 const clearImage = () => {
@@ -57,7 +56,6 @@ const clearImage = () => {
 	while (image_area.firstChild) {
 		image_area.removeChild(image_area.firstChild);
 	}
-	//downloadCSV.disabled = true;
 }
 
 // マウスで四角形領域を描く
@@ -70,27 +68,45 @@ const drawSquare = (canvas, event) => {
 			var x = (event.clientX - rect.left) / zoom;
 			var y = (event.clientY - rect.top) / zoom;
 			console.log(x,y);
-	
+			
+			// stroke,fillのスタイル設定
+			context.fillStyle = "rgba(100, 0, 255, 1)";
+			context.strokeStyle = "rgba(100, 0, 255, 1)";
+			context.lineWidth = 2 / zoom;
+
+			// クリックした点に小円を描く
 			context.beginPath();
 			context.arc(x, y, 5 / zoom, 0, Math.PI * 2, 0);
 			context.fill();
 			context.stroke();
 			
-			points.push({"x": Math.floor(x), "y": Math.floor(y)});
+			// クリックした点を配列pointsに収録する
+			points.push([Math.floor(x), Math.floor(y)]);
+
+			// クリックした点同士をつないでいく
 			if (n > 0) {
-				context.lineWidth = 2 / zoom;
 				context.beginPath();
-				context.moveTo(points[n-1]["x"], points[n-1]["y"]);
-				context.lineTo(points[n]["x"], points[n]["y"]);
+				context.moveTo(points[n-1][0], points[n-1][1]);
+				context.lineTo(points[n][0], points[n][1]);
 				context.closePath();
 				context.stroke();
 				if (n == 3) {
 					context.beginPath();
-					context.moveTo(points[3]["x"], points[3]["y"]);
-					context.lineTo(points[0]["x"], points[0]["y"]);
+					context.moveTo(points[3][0], points[3][1]);
+					context.lineTo(points[0][0], points[0][1]);
 					context.closePath();
 					context.stroke();
-	
+
+					// 四角形領域に色を付ける
+					context.beginPath();
+					context.moveTo(points[0][0], points[0][1]);
+					context.lineTo(points[1][0], points[1][1]);
+					context.lineTo(points[2][0], points[2][1]);
+					context.lineTo(points[3][0], points[3][1]);
+					context.fillStyle = "rgba(225, 225, 0, 0.5)";
+					context.fill();
+
+					// 四点打ち終わったら座標情報を発行する
 					const output = document.getElementById("output");
 					output.value = JSON.stringify(points, null, "\t");
 				}
@@ -99,6 +115,7 @@ const drawSquare = (canvas, event) => {
 			var dialogResult = window.confirm("既に4点指定しています。「キャンセル」を押すとこのダイアログは閉じます。「OK」を押すと画面は初期化されます。");
 			if (dialogResult == true) {
 				clearImage();
+				points = [];
 			}
 		}
 }
@@ -107,5 +124,6 @@ const drawSquare = (canvas, event) => {
 document.addEventListener("keydown", event => {
 	if (event.code == "Escape") {
 		clearImage();
+		points = [];
 	}
 })
