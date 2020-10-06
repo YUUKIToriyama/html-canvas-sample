@@ -3,11 +3,11 @@
 
 ## Usage
 ```bash
-// clone this repository
+# clone this repository
 git clone https://github.com/YUUKIToriyama/skewedImageIron.git
-// do npm settings
+# do npm settings
 npm install
-// type these commands on bash, and go to localhost:8080 on your browser
+# type these commands on bash, and go to localhost:8080 on your browser
 npm run test
 ```
 
