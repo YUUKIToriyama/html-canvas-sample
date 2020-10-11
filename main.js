@@ -99,14 +99,19 @@ const drawSquare = (event) => {
 } 
 
 // ホモグラフィ変換で画像の歪みを補正する
-const rectifyImage = (src, points) => {
-	let w = src.rows;
-	let h = src.cols;
+const rectifyImage = (src, p) => {
 	let srcArr = [];
-	points.forEach(p => {
+	p.forEach(p => {
 		srcArr.push(p.x);
 		srcArr.push(p.y);
 	});
+	// 生成画像のアスペクト比を決める
+	let w1 = Math.sqrt((p[0].x - p[1].x) ** 2 + (p[0].y - p[1].y) ** 2);
+	let h1 = Math.sqrt((p[1].x - p[2].x) ** 2 + (p[1].y - p[2].y) ** 2);
+	let w2 = Math.sqrt((p[2].x - p[3].x) ** 2 + (p[2].y - p[3].y) ** 2);
+	let h2 = Math.sqrt((p[3].x - p[0].x) ** 2 + (p[3].y - p[0].y) ** 2);
+	let w = Math.max(w1, w2);
+	let h = Math.max(h1, h2);
 	let dstArr = [
 		0,0,
 		w,0,
